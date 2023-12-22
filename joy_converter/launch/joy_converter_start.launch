@@ -1,0 +1,16 @@
+<launch>
+    <arg name="joy" default="js0" />
+
+    <rosparam command="load" file="$(find joy_converter)/config/joy_converter_config.yaml" ns="joy_converter"/>
+    
+    <!-- <node name="service_server" pkg="walkerbro" type="service_node.py" output="screen"/> -->
+    <node name="joy_converter" pkg="joy_converter" type="joy_converter_main.py" output="screen">
+        <param name='joystick_path' value="$(arg joy)"/>
+    </node>
+    <!-- <node name="joy_node" pkg="joy" type="joy_node.py" output="screen"/> -->
+    <node name="joy_node" pkg="joy" type="joy_node">
+        <param name="dev" value="/dev/input/$(arg joy)"/>
+    </node>
+    <!-- <node name="ds4_driver" pkg="ds4_driver" type="ds4_driver_node.py" output="screen"/> -->
+    <!-- <node name="logitech_gamepad_node" pkg="logitech_gamepad" type="logitech_gamepad_node.py" output="screen"/> -->
+</launch>

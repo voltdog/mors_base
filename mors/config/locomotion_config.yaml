@@ -3,18 +3,18 @@ general:
   contact_flags: True
 
 simulation:
-  kp : [40.0, 40.0, 40.0]
+  kp : [60.0, 60.0, 60.0]
   kd : [0.3, 0.3, 0.3]
-  yaw_kp: 0.4
+  yaw_kp: 0.3
   kinematic_scheme : "m"
-  robot_height: 0.22
-  cog_x_offset: -0.02
+  robot_height: 0.215
+  cog_x_offset: -0.036
   cog_y_offset: 0.0
   cog_z_offset: 0.0
-  ef_init_x: 0.166
-  ef_init_y: 0.12
+  ef_init_x: 0.1655
+  ef_init_y: 0.11
   stride_frequency: 3.0
-  preview_horizon: 1.0
+  preview_horizon: 0.5
 
 hardware:
   # [abad, hip, knee]
