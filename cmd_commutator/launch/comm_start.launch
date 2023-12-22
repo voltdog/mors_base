@@ -1,0 +1,5 @@
+<launch>
+    <rosparam command="load" file="$(find cmd_commutator)/config/cmd_commutator_config.yaml" ns="cmd_commutator"/>
+    
+    <node name="cmd_commutator" pkg="cmd_commutator" type="main.py" output="screen"/>
+</launch>

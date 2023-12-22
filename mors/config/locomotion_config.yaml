@@ -1,0 +1,48 @@
+general:
+  frequency: 300
+  contact_flags: True
+
+simulation:
+  kp : [40.0, 40.0, 40.0]
+  kd : [0.3, 0.3, 0.3]
+  yaw_kp: 0.4
+  kinematic_scheme : "m"
+  robot_height: 0.22
+  cog_x_offset: -0.02
+  cog_y_offset: 0.0
+  cog_z_offset: 0.0
+  ef_init_x: 0.166
+  ef_init_y: 0.12
+  stride_frequency: 3.0
+  preview_horizon: 1.0
+
+hardware:
+  # [abad, hip, knee]
+  kp : [26, 26.0, 12.0]
+  kd : [0.4, 0.4, 0.3]
+  # kp : [0.6, 0.6, 0.6]
+  # kd : [0.3, 0.3, 0.3]
+  
+  yaw_kp: 0.3
+  kinematic_scheme : "m" #"o" #"x" #"m"
+  robot_height: 0.215 #0.19 #0.19 #0.23
+  cog_x_offset: -0.036 #0.0 #-0.01 #-0.035
+  cog_y_offset: 0.0 #0.0 #0.0 #0.0
+  cog_z_offset: 0.0 #0.0 #0.0 #0.05
+  ef_init_x: 0.1655 #0.1655 #0.149 #0.149 #0.1655
+  ef_init_y: 0.11 #0.10 #0.10 #0.11
+  stride_frequency: 3.0
+  preview_horizon: 0.5
+ 
+topics:
+  lcm_servo_cmd_channel: "SERVO_CMD"
+  lcm_servo_state_channel: "SERVO_STATE"
+
+  ros_imu_topic: "imu/data"
+  ros_cmd_vel_topic: "cmd_vel"
+  ros_cmd_pose_topic: "cmd_pose"
+  ros_cmd_ef_pose_topic: "ef_position/command"
+  ros_cmd_joint_pos_topic: "joint_group_position_controller/command"
+
+  ros_state_contact_flags_topic: "foot_contacts"
+  ros_state_ef_pose_topic: "ef_position/states"

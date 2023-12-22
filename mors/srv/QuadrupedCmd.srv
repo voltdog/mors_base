@@ -1,0 +1,11 @@
+float32 cmd
+---
+int16 result		# 1:success, -1:false
+string description  # relative description
+
+
+# cmd
+# 1 - standup
+# 2 - lay down
+# 3 - sitdown
+# 4 - give hand

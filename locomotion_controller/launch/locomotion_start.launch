@@ -1,0 +1,7 @@
+<launch>
+    <rosparam command="load" file="$(find locomotion_controller)/config/locomotion_config.yaml" ns="locomotion_controller"/>
+    
+    <!-- <node name="service_server" pkg="walkerbro" type="service_node.py" output="screen"/> -->
+    <node name="locomotion_controller" pkg="locomotion_controller" type="locomotion_main.py" output="screen"/>
+
+</launch>

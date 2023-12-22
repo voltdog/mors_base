@@ -1,0 +1,24 @@
+base: base_link
+left_front:
+  - abad_L1
+  - hip_L1
+  - knee_L1
+  - ef_L1
+
+right_front:
+  - abad_R1
+  - hip_R1
+  - knee_R1
+  - ef_R1
+
+left_hind:
+  - abad_L2
+  - hip_L2
+  - knee_L2
+  - ef_L2
+
+right_hind:
+  - abad_R2
+  - hip_R2
+  - knee_R2
+  - ef_R2

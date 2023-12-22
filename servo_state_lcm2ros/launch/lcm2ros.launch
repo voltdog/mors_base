@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+	<arg name="lcm2ros"               default="true" />
+	
+	<rosparam command="load" file="$(find servo_state_lcm2ros)/config/lcm2ros_config.yaml" ns="servo_state_lcm2ros"/>
+
+	<node if="$(arg lcm2ros)" name="servo_state_lcm2ros" pkg="servo_state_lcm2ros" type="main.py" output="screen"/>
+
+</launch>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<launch>
+    <!-- For SLAM -->
+    <arg name="robot_name" default="/"/>
+    <arg name="rviz"       default="false"/>
+    
+    <arg if="$(eval arg('robot_name') == '/')"  name="frame_prefix" value="" />
+    <arg unless="$(eval arg('robot_name') == '/')" name="frame_prefix" value="$(arg robot_name)/" />
+
+    <node pkg="rostopic" type="rostopic" name="nav_status" output="screen" args="pub nav/status std_msgs/Bool 'data: True'" />
+
+    <!-- Start Move Base and GMapping-->
+    <group ns="$(arg robot_name)">
+        <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" >
+            <arg name="raw_cmd_vel_topic"     value="nav/cmd_vel/raw"/>
+            <arg name="smooth_cmd_vel_topic"  value="nav/cmd_vel"/>
+            <arg name="robot_cmd_vel_topic"   value="nav/cmd_vel"/>
+            <arg name="node_name"             value="velocity_smoother"/>
+        </include>
+        
+        <include file="$(find mors)/launch/include/gmapping.launch">
+            <arg name="frame_prefix" value="$(arg frame_prefix)"/>
+        </include>
+
+        <!-- Calls navigation stack packages -->
+        <include file="$(find mors)/launch/include/move_base.launch">
+            
+            <arg name="frame_prefix" value="$(arg frame_prefix)"/>
+            <arg name="robot_name"   value="$(arg robot_name)"/>
+        </include>
+
+        <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
+            args="-d $(find champ_navigation)/rviz/navigate.rviz -f $(arg frame_prefix)map"
+            output="screen"/>
+    </group>
+    
+
+</launch>

@@ -1,0 +1,35 @@
+general:
+  frequency: 40
+topics:
+  cmd_vel: "ds4/cmd_vel" #"ds4/cmd_vel"
+  cmd_pose: "ds4/cmd_pose" #"ds4/cmd_pose"
+  cmd_ef_pose: "ds4/ef_position/command" #"ds4/ef_position/command"
+  cmd_joint_pos: "ds4/joint_group_position_controller/command" #"ds4/joint_group_position_controller/command" 
+  status: "ds4/status"
+gait:
+  max_speed_x: 1.0
+  max_speed_y: 0.2
+  max_speed_z: 0.91
+  stride_height: 0.07
+pose:
+  max_angle_x: 0.33
+  max_angle_y: 0.33
+  max_angle_z: 0.33
+  max_lin_x: 0.1
+  max_lin_y: 0.1
+  max_lin_z: 0.06
+  min_lin_z: 0.11
+ef:
+  max_pos_x: 0.05
+  max_pos_y: 0.05
+  max_pos_z: 0.05
+  min_pos_z: 0.05
+joints:
+  max_abad: 1.57
+  max_hip: 1.57
+  max_knee: 1.57
+modes:
+  walk: 0
+  ef: 1
+  body: 2
+  joint: 3

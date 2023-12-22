@@ -1,0 +1,33 @@
+frequency: 40
+
+output_cmd_vel_topic: "cmd_vel"
+output_cmd_pose_topic: "cmd_pose"
+output_cmd_ef_pose_topic: "ef_position/command"
+output_cmd_joint_pos_topic: "joint_group_position_controller/command"
+output_status_topic: "cur_device"
+
+input1_cmd_vel_topic: "ds4/cmd_vel"
+input1_cmd_pose_topic: "ds4/cmd_pose"
+input1_cmd_ef_pose_topic: "ds4/ef_position/command"
+input1_cmd_joint_pos_topic: "ds4/joint_group_position_controller/command"
+input1_status_topic: "ds4/status"
+
+input2_cmd_vel_topic: "radiolink/cmd_vel"
+input2_cmd_pose_topic: "radiolink/cmd_pose"
+input2_cmd_ef_pose_topic: "radiolink/ef_position/command"
+input2_cmd_joint_pos_topic: "radiolink/joint_group_position_controller/command"
+input2_status_topic: "radiolink/status"
+
+input3_cmd_vel_topic: "nav/cmd_vel"
+input3_cmd_pose_topic: "nav/cmd_pose"
+input3_cmd_ef_pose_topic: "nav/ef_position/command"
+input3_cmd_joint_pos_topic: "nav/joint_group_position_controller/command"
+input3_status_topic: "nav/status"
+
+input4_cmd_vel_topic: "gui/cmd_vel"
+input4_cmd_pose_topic: "gui/cmd_pose"
+input4_cmd_ef_pose_topic: "gui/ef_position/command"
+input4_cmd_joint_pos_topic: "gui/joint_group_position_controller/command"
+input4_status_topic: "gui/status"
+
+

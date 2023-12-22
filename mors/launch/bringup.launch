@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="rviz"                  default="false" />
+    <arg name="robogui"               default="false" />
+    <arg name="ds4"                   default="false" />
+    <arg name="radiolink"             default="true" />
+    <arg name="sim"                   default="false" />
+    <arg name="hardware"              default="true" />
+    <arg name="lcm2ros"               default="true" />
+    <arg name="run_state_estimation"  default="false" />
+
+    <arg name="robot_name"            default="/"/>
+    <arg if="$(eval arg('robot_name') == '/')"  name="frame_prefix" value="" />
+    <arg unless="$(eval arg('robot_name') == '/')" name="frame_prefix" value="$(arg robot_name)/" />
+    <arg name="description_name"       default="robot_description"/>
+    <arg name="base_frame"             default="base_link" />
+    <arg name="description_file"       default="$(find mors)/urdf/mors_for_nav.urdf"/>
+    
+    <param name="gait/odom_scaler" type="double" value="2.8"/>
+
+    <rosparam command="load" file="$(find mors)/config/pybullet_config.yaml" ns="mors_pybullet"/>
+    <rosparam command="load" file="$(find mors)/config/cmd_commutator_config.yaml" ns="cmd_commutator"/>
+    <rosparam command="load" file="$(find mors)/config/ds4_config.yaml" ns="ds4_teleop"/>
+    <rosparam command="load" file="$(find mors)/config/robogui_config.yaml" ns="robogui"/>
+    <rosparam command="load" file="$(find mors)/config/locomotion_config.yaml" ns="locomotion_controller"/>
+    <rosparam command="load" file="$(find mors)/config/lcm2ros_config.yaml" ns="servo_state_lcm2ros"/>
+    <rosparam command="load" file="$(find mors)/config/radiolink_config.yaml" ns="radiolink_teleop"/>
+    
+    <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find mors_sim)/rviz/ctrl_test.rviz" />
+    
+    <node if="$(arg sim)" name="mors_pybullet" pkg="mors_sim" type="mors_pybullet.py" output="screen"/>
+    <node name="cmd_commutator" pkg="cmd_commutator" type="main.py" output="screen"/>
+    <node name="locomotion_controller" pkg="locomotion_controller" type="locomotion_main.py" output="screen"/>
+    <node if="$(arg lcm2ros)" name="servo_state_lcm2ros" pkg="servo_state_lcm2ros" type="main.py" output="screen"/>
+
+    <node if="$(arg robogui)" name="robogui" pkg="robogui" type="main.py" output="screen"/>
+    <node if="$(arg ds4)" name="ds4_teleop" pkg="ds4_teleop" type="ds4_main.py" output="screen"/>
+    <node if="$(arg ds4)" name="ds4_driver" pkg="ds4_driver" type="ds4_driver_node.py" output="screen"/>
+    <node if="$(arg radiolink)" name="radiolink_teleop" pkg="radiolink_teleop" type="t8s_ros.py" output="screen"/>
+    <node if="$(arg radiolink)" name="joy" pkg="joy" type="joy_node">
+                <param name="dev" value="/dev/input/js0" />
+    </node>
+
+    <!-- Run indication and buttons reader -->
+    <node if="$(arg hardware)" pkg="status_tracker" type="status_tracker.py" name="status_tracker" output="screen"/>
+    <node if="$(arg hardware)" pkg="power_bridge" type="power_bridge_node" name="power_bridge" output="screen"/>
+
+    <!-- Run Bosch BNO055 IMU -->
+    <arg if="$(arg hardware)" name="bosch_config_file" default="$(find bosch_imu_driver)/config/imu_bosch.yaml"/>
+    <node if="$(arg hardware)"  pkg="bosch_imu_driver" type="bosch_imu_node.py" name="bosch_imu_node" output="screen">
+        
+        <rosparam file="$(arg bosch_config_file)" command="load" ns="bosch_imu_driver"/>
+    </node>
+
+    <group ns="$(arg robot_name)">
+        <param name="tf_prefix" value="$(arg robot_name)"/>
+
+        <!-- ==================== LOAD PARAMETERS ==================== -->
+
+        <param name="$(arg description_name)" textfile="$(arg description_file)"/>
+
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+            <param name="use_tf_static"     value="false"/>
+            <param name="publish_frequency" value="300"/>
+            <param name="ignore_timestamp" value="true"/>
+            <remap from="robot_description" to="$(arg description_name)"/>
+        </node>
+
+        <rosparam command="load" file="$(find mors)/config/links/links.yaml" ns="links_map"/>
+        <rosparam command="load" file="$(find mors)/config/joints/joints.yaml" ns="joints_map"/>
+
+        <!-- ==================== STATE ESTIMATION ==================== -->
+        <node if="$(arg run_state_estimation)" pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen">
+            <param name="orientation_from_imu" value="true"/>            
+        </node>
+
+        <node if="$(arg run_state_estimation)" pkg="robot_localization" type="ekf_localization_node" name="base_to_footprint_ekf"> 
+            <remap from="odometry/filtered" to="odom/local" />
+            <param name="base_link_frame" value="$(arg base_frame)" />
+            <rosparam command="load" file="$(find champ_base)/config/ekf/base_to_footprint.yaml" />
+        </node>
+
+        <node if="$(arg run_state_estimation)" pkg="robot_localization" type="ekf_localization_node" name="footprint_to_odom_ekf"> 
+            <remap from="odometry/filtered" to="odom" />
+            <rosparam command="load" file="$(find champ_base)/config/ekf/footprint_to_odom.yaml" />
+        </node>
+        
+    </group>
+
+</launch>

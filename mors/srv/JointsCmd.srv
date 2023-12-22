@@ -1,0 +1,4 @@
+float32[] cmd
+---
+int16 result		# 1:success, -1:false
+string description  # relative description

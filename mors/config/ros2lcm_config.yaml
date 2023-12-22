@@ -1,0 +1,6 @@
+frequency: 500
+ros_joint_cmd_topic: "joint_group_position_controller/command"
+lcm_joint_cmd_topic: "SERVO_CMD"
+
+joint_order: [3, 5, 4, 9, 11, 10, 0, 2, 1, 6, 8, 7]
+joint_directions: [ 1,  -1,  -1, 1,  1,  1, -1,  -1,  -1, -1,  1,  1]

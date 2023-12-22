@@ -1,0 +1,34 @@
+"":
+  joint_states_controller:
+      type: joint_state_controller/JointStateController
+      publish_rate: 50
+
+  joint_group_position_controller:
+      type: effort_controllers/JointTrajectoryController
+      joints:
+          - torso_to_abduct_fl_j
+          - abduct_fl_to_thigh_fl_j
+          - thigh_fl_to_knee_fl_j
+          - torso_to_abduct_fr_j
+          - abduct_fr_to_thigh_fr_j
+          - thigh_fr_to_knee_fr_j
+          - torso_to_abduct_hl_j
+          - abduct_hl_to_thigh_hl_j
+          - thigh_hl_to_knee_hl_j
+          - torso_to_abduct_hr_j
+          - abduct_hr_to_thigh_hr_j
+          - thigh_hr_to_knee_hr_j
+
+      gains:
+        torso_to_abduct_fl_j    : {p: 64, d: 0.2, i: 0}
+        abduct_fl_to_thigh_fl_j : {p: 64, d: 0.2, i: 0}
+        thigh_fl_to_knee_fl_j   : {p: 64, d: 0.2, i: 0}
+        torso_to_abduct_fr_j    : {p: 64, d: 0.2, i: 0}
+        abduct_fr_to_thigh_fr_j : {p: 64, d: 0.2, i: 0}
+        thigh_fr_to_knee_fr_j   : {p: 64, d: 0.2, i: 0}
+        torso_to_abduct_hl_j    : {p: 64, d: 0.2, i: 0}
+        abduct_hl_to_thigh_hl_j : {p: 64, d: 0.2, i: 0}
+        thigh_hl_to_knee_hl_j   : {p: 64, d: 0.2, i: 0}
+        torso_to_abduct_hr_j    : {p: 64, d: 0.2, i: 0}
+        abduct_hr_to_thigh_hr_j : {p: 64, d: 0.2, i: 0}
+        thigh_hr_to_knee_hr_j   : {p: 64, d: 0.2, i: 0}
