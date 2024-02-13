@@ -97,16 +97,6 @@ class LayDown():
             self.all_kp_refs[i].append(self.ref_joint_kp[i])
             self.all_kd_refs[i].append(self.ref_joint_kd[i])
 
-        # theta_cur = np.array(self.cur_joint_pos[:])
-        # theta_ref = self.ik.calculate([ self.ef_init_x, -self.ef_init_y, -self.robot_height,
-        #                                 self.ef_init_x,  self.ef_init_y, -self.robot_height,
-        #                                 -self.ef_init_x, -self.ef_init_y, -self.robot_height,
-        #                                 -self.ef_init_x,  self.ef_init_y, -self.robot_height], config=self.kinematic_scheme)
-        # theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 1.0, 1/self.freq)
-        # self.take_position(theta_refs)
-
-        # time.sleep(1)
-
         
         if self.kinematic_scheme =='m':
             theta_ref = [theta_cur[0], -1.57, 2.9, theta_cur[3], 1.57, -2.9, theta_cur[6], -1.57, 2.9, theta_cur[9], 1.57, -2.9]
@@ -125,13 +115,39 @@ class LayDown():
         theta_cur = theta_ref[:]
         # self.theta_ref = self.theta_cur[:]
         if self.kinematic_scheme =='m':
-            self.theta_ref = [0, -1.57, 2.9, 0, 1.57, -2.9, 0, -1.57, 2.9, 0, 1.57, -2.9]
+            theta_ref = [0, -1.57, 2.9, 0, 1.57, -2.9, 0, -1.57, 2.9, 0, 1.57, -2.9]
         elif self.kinematic_scheme == 'x':
-            self.theta_ref = [0, -1.57, 2.9, 0, 1.57, -2.9, 0, 1.57, -2.9, 0, -1.57, 2.9]
+            theta_ref = [0, -1.57, 2.9, 0, 1.57, -2.9, 0, 1.57, -2.9, 0, -1.57, 2.9]
         elif self.kinematic_scheme =='o':
-            self.theta_ref = [0, 1.57, -2.9, 0, -1.57, 2.9, 0, -1.57, 2.9, 0, 1.57, -2.9]
+            theta_ref = [0, 1.57, -2.9, 0, -1.57, 2.9, 0, -1.57, 2.9, 0, 1.57, -2.9]
         theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.5, 1/self.freq)
-        # self.take_position(theta_refs)
+
+
+        for i in range(12):
+            self.all_theta_refs[i] = self.all_theta_refs[i] + theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        # установить ноги в позицию когда бедра наверху
+        theta_cur = theta_ref[:]
+        theta_ref = [-1.57, -1.57,  3.14, 
+                      1.57,  1.57, -3.14, 
+                      1.57, -1.57,  3.14, 
+                     -1.57,  1.57, -3.14]
+        theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.5, 1/self.freq)
+
+        for i in range(12):
+            self.all_theta_refs[i] = self.all_theta_refs[i] + theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        # установить ноги в позицию когда колени смотрят внутрь
+        theta_cur = theta_ref[:]
+        theta_ref = [-1.57, -1.57,  3.14, 
+                      1.57,  1.57, -3.14, 
+                      1.57,  1.57,  3.14, 
+                     -1.57, -1.57, -3.14]
+        theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.5, 1/self.freq)
 
         for i in range(12):
             self.all_theta_refs[i] = self.all_theta_refs[i] + theta_refs[i]
@@ -139,6 +155,7 @@ class LayDown():
             self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
 
         # Decrease kpkd
+        theta_cur = theta_ref[:]
         for _ in range(int(self.freq*0.4)):
             self.kpkd_dec(0.4)
             for i in range(12):

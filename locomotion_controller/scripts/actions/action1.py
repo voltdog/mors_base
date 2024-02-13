@@ -99,22 +99,31 @@ class GetUp():
 
         theta_cur = list(self.cur_joint_pos[:])
         theta_ref = theta_cur[:]
-        # theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.1, 1/self.freq)
-        # print(self.all_theta_refs)
-        # print(theta_refs[0])
-        # print(self.all_kp_refs)
-        # print(self.ref_joint_kp)
-        # print(theta_cur)
+
+        if theta_cur[1] < 0 and theta_cur[4] > 0 and theta_cur[7] < 0 and theta_cur[10] > 0:
+            print("___")
+            print("> >")
+            start_pos = 'm'
+        elif theta_cur[1] < 0 and theta_cur[4] > 0 and theta_cur[7] > 0 and theta_cur[10] < 0:
+            print("___")
+            print("> <")
+            start_pos = 'x'
+        elif theta_cur[1] > 0 and theta_cur[4] < 0 and theta_cur[7] > 0 and theta_cur[10] < 0:
+            print("___")
+            print("< <")
+            start_pos = 'inv_m'
+        elif theta_cur[1] > 0 and theta_cur[4] < 0 and theta_cur[7] < 0 and theta_cur[10] > 0:
+            print("___")
+            print("< >")
+            start_pos = 'o'
+        else:
+            start_pos = 'z'
+
         for i in range(12):
             self.all_theta_refs[i].append(theta_cur[i])
             self.all_kp_refs[i].append(self.ref_joint_kp[i])
             self.all_kd_refs[i].append(self.ref_joint_kd[i])
-        
-        # print(self.all_kp_refs)
-        
-        # self.ref_joint_pos = np.array(self.cur_joint_pos[:])
-        # time.sleep(0.1)
-        # print(self.ref_joint_kp)
+
         for _ in range(int(self.freq*0.4)):
             self.kpkd_inc(0.4)
             # print(self.ref_joint_kp)
@@ -123,11 +132,39 @@ class GetUp():
                 self.all_kp_refs[i].append(self.ref_joint_kp[i])
                 self.all_kd_refs[i].append(self.ref_joint_kd[i])
 
-        # print(len(self.all_kp_refs))
-        # print(len(self.all_kp_refs[0]))
-        # print(self.all_kp_refs[0])
-        # theta_cur = np.array(self.cur_joint_pos[:])
-        # theta_ref = theta_cur[:]
+        if start_pos != 'm':
+            # установить ноги в позицию когда бедра наверху
+            theta_cur = theta_ref[:]
+            theta_ref[0] = -1.57
+            theta_ref[3] = 1.57
+            theta_ref[6] = 1.57
+            theta_ref[9] = -1.57
+            theta_ref[2] = 3.14
+            theta_ref[5] = -3.14
+            theta_ref[8] = 3.14
+            theta_ref[11] = -3.14
+
+            theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.5, 1/self.freq)
+
+            for i in range(12):
+                self.all_theta_refs[i] = self.all_theta_refs[i] + theta_refs[i]
+                self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+                self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+            # установить ноги в позицию когда задние колени смотрят наружу
+            theta_cur = theta_ref[:]
+            theta_ref = [-1.57, -1.57,  3.14, 
+                        1.57,  1.57, -3.14, 
+                        1.57, -1.57,  3.14, 
+                        -1.57,  1.57, -3.14]
+            theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.5, 1/self.freq)
+
+            for i in range(12):
+                self.all_theta_refs[i] = self.all_theta_refs[i] + theta_refs[i]
+                self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+                self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        theta_cur = theta_ref[:]
         if self.kinematic_scheme == 'm':
             theta_ref[2] = 3.14
             theta_ref[5] = -3.14
@@ -145,14 +182,11 @@ class GetUp():
             theta_ref[11] = -3.14
 
         theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.4, 1/self.freq)
-        
-        # self.take_position(theta_refs)
+
         for i in range(12):
             self.all_theta_refs[i] = self.all_theta_refs[i] + theta_refs[i]
             self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
             self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
-
-        # time.sleep(2)
 
         theta_cur = theta_ref[:]
         if self.kinematic_scheme == 'm':
@@ -162,67 +196,49 @@ class GetUp():
         elif self.kinematic_scheme == 'o':
             theta_ref = [0, 1.57, -3.14, 0, -1.57, 3.14, 0, -1.57, 3.14, 0, 1.57, -3.14]
         theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.4, 1/self.freq)
-        # self.take_position(theta_refs)
 
         for i in range(12):
             self.all_theta_refs[i] += theta_refs[i]
             self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
             self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
-        
-        # time.sleep(2)
+
         l = 0.09585
         abad_attach_y = 0.066
         angle = np.arccos((self.ef_init_y-abad_attach_y)/l)
 
-        # theta_cur = np.array(self.cur_joint_pos[:])
-        # theta_ref = np.array(self.cur_joint_pos[:])
         theta_cur = theta_ref[:]
         theta_ref = theta_cur[:]
         theta_ref[0] = angle
         theta_ref[6] = -angle
         theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.3, 1/self.freq)
-        # self.take_position(theta_refs)
         
         for i in range(12):
             self.all_theta_refs[i] += theta_refs[i]
             self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
             self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
-        
-        # time.sleep(1)
- 
-        # theta_cur = np.array(self.cur_joint_pos[:])
-        # theta_ref = np.array(self.cur_joint_pos[:])
+
         theta_cur = theta_ref[:]
         theta_ref = theta_cur[:]
         theta_ref[3] = -angle
         theta_ref[9] = angle
         theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.3, 1/self.freq)
-        # self.take_position(theta_refs)
 
         for i in range(12):
             self.all_theta_refs[i] += theta_refs[i]
             self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
             self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
-        
-        # time.sleep(1)
-        
+
         theta_cur = theta_ref[:]
         theta_ref = self.ik.calculate([ self.ef_init_x+self.cog_offset_x, -self.ef_init_y, -self.robot_height,
                                              self.ef_init_x+self.cog_offset_x,  self.ef_init_y, -self.robot_height,
                                             -self.ef_init_x+self.cog_offset_x, -self.ef_init_y, -self.robot_height,
                                             -self.ef_init_x+self.cog_offset_x,  self.ef_init_y, -self.robot_height], config=self.kinematic_scheme)
         theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.6, 1/self.freq)
-        # self.take_position(theta_refs)
 
         for i in range(12):
             self.all_theta_refs[i] += theta_refs[i]
             self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
             self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
-
-        # time.sleep(1)
-        # print(len(self.all_kd_refs[0]))
-        # print(len(self.all_kp_refs[0]))
-        # print(len(self.all_theta_refs[0]))
 
         # Finish
 

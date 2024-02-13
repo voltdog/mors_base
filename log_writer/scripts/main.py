@@ -29,7 +29,7 @@ class LogWriter():
         self.bat_msg = BatteryState()
 
         filename = f"log_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}.csv"
-        self.file = open(f"/home/user/mors_ws/src/log_writer/logs/{filename}", 'w')
+        self.file = open(f"/home/user/mors_ws/src/mors_base/log_writer/logs/{filename}", 'w')
 
         # cmd_vel[X], cmd_vel[Y], cmd_vel[Z], \
         #     cmd_pose_linear[X], cmd_pose_linear[Y], cmd_pose_linear[Z], cmd_pose_angular[X], cmd_pose_angular[Y], cmd_pose_angular[Z],\

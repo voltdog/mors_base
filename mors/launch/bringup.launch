@@ -43,12 +43,12 @@
     </node>
 
     <!-- Run indication and buttons reader -->
-    <node if="$(arg hardware)" pkg="status_tracker" type="status_tracker.py" name="status_tracker" output="screen"/>
-    <node if="$(arg hardware)" pkg="power_bridge" type="power_bridge_node" name="power_bridge" output="screen"/>
+    <node if="$(arg hardware)" pkg="status_tracker" type="status_tracker.py" name="status_tracker" output="screen" respawn="true"/>
+    <node if="$(arg hardware)" pkg="power_bridge" type="power_bridge_node" name="power_bridge" output="screen" respawn="true"/>
 
     <!-- Run Bosch BNO055 IMU -->
     <arg if="$(arg hardware)" name="bosch_config_file" default="$(find bosch_imu_driver)/config/imu_bosch.yaml"/>
-    <node if="$(arg hardware)"  pkg="bosch_imu_driver" type="bosch_imu_node.py" name="bosch_imu_node" output="screen">
+    <node if="$(arg hardware)"  pkg="bosch_imu_driver" type="bosch_imu_node.py" name="bosch_imu_node" output="screen" respawn="true">
         
         <rosparam file="$(arg bosch_config_file)" command="load" ns="bosch_imu_driver"/>
     </node>

@@ -233,11 +233,14 @@ class RobotController():
         self.yaw_cur = 0
         self.yaw_e = 0
 
+        self.K_body = [0.82, 0.82, 0.82, 0.82, 0.82, 0.88] # x y z roll pitch yaw
+        self.K_robot = [0.92, 0.92, 0.72] # x y z
+
     def step(self):
         # low pass filter for cmd vel
         param = np.array([self.cmd_vel[X], self.cmd_vel[Y], self.cmd_vel[Z]])
         d_param = param - self.pre_lpf_cmd_vel
-        out_param = param - 0.93*d_param
+        out_param = param - np.multiply(self.K_robot, d_param)
         self.pre_lpf_cmd_vel = out_param[:]
         self.cmd_vel[X] = out_param[0]
         self.cmd_vel[Y] = out_param[1]
@@ -245,13 +248,16 @@ class RobotController():
 
         param = np.array(self.cmd_pose)
         d_param = param - self.pre_lpf_cmd_pose
-        out_param = param - 0.82*d_param
+        
+        out_param = param - np.multiply(self.K_body, d_param)
         self.pre_lpf_cmd_pose = out_param[:]
         self.cmd_pose = out_param[:]
 
         # check if node is disabled
         if self.robot_disable == True:
             self.standing = False
+            # self.mode_num = 4
+            self.action_num = 0
 
         # print(self.robot_disable, self.standing)
 
@@ -293,11 +299,12 @@ class RobotController():
         ref_servo_vel = [0]*12
         ref_servo_torq = [0]*12
         ref_servo_kp = [0]*12
-        ref_servo_kd = [0.0]*12
+        ref_servo_kd = self.kd[:]#[0.0]*12
 
         return ref_servo_pos, ref_servo_vel, ref_servo_torq, ref_servo_kp, ref_servo_kd
 
     def action(self):
+        
         if self.action_num == 1:
             if self.get_up_started == False:
                 self.get_up.reset()
@@ -455,7 +462,7 @@ class RobotController():
             rot_dir = 0
         
         if yaw_u == 0:
-            rot_r = 0
+            rot_r = 5000000
         else:
             rot_r = 1 - np.abs(np.clip(yaw_u, -0.9, 0.9))
 

@@ -8,6 +8,9 @@
 # .catkin_workspace
 # /CMakeLists.txt
 # ds4_teleop/launch/test.launch
+__pycache__/
+
+*.csv
 
 # Compiled source #
 ###################

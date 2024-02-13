@@ -2,6 +2,7 @@ import numpy as np
 from zmp_controller.TrajectoryGenerator import create_multiple_trajectory
 import time
 from zmp_controller.ikine import IKineQuadruped
+from zmp_controller.fkine import FKineQuadruped
 
 
 class Action6():
@@ -35,6 +36,7 @@ class Action6():
         self.ref_joint_kd = np.array([0.0]*12)
 
         self.ik = IKineQuadruped(theta_offset=[0, -np.pi/2, 0])
+        self.fk = FKineQuadruped(theta_offset=[0, -np.pi/2, 0])
 
         self.start_time = int(time.time()*1000.0)
 
@@ -43,8 +45,6 @@ class Action6():
         self.all_torq_refs = [[], [], [], [], [], [], [], [], [], [], [], []]
         self.all_kp_refs = [[], [], [], [], [], [], [], [], [], [], [], []]
         self.all_kd_refs = [[], [], [], [], [], [], [], [], [], [], [], []]
-
-        # print(self.max_kp)
 
     def is_finished(self):
         return self.finished
@@ -87,7 +87,52 @@ class Action6():
         return finished, self.ref_joint_pos, self.ref_joint_vel, self.ref_joint_torq, self.ref_joint_kp, self.ref_joint_kd
 
     def execute(self):
+        self.finished = False
+
         # Put your code here
-        pass
+        
+        self.ref_joint_kp = [self.max_kp[0], self.max_kp[1], self.max_kp[2]]*4
+        self.ref_joint_kd = [self.max_kd[0], self.max_kd[1], self.max_kd[2]]*4
+
+        theta_cur = list(self.cur_joint_pos[:])
+        theta_start = theta_cur.copy()
+
+        for i in range(12):
+            self.all_theta_refs[i].append(theta_cur[i])
+            self.all_kp_refs[i].append(self.ref_joint_kp[i])
+            self.all_kd_refs[i].append(self.ref_joint_kd[i])
+
+        # sit down
+        theta_ref = [0.3, -0.57, 0.31, 
+                      -0.3, 0.57, -0.31, 
+                      -0.3, -1.29, 2.28, 
+                      0.3, 1.29, -2.28]
+        theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.4, 1/self.freq)
+        for i in range(12):
+            self.all_theta_refs[i] += theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        # Delay
+
+        theta_refs = create_multiple_trajectory(theta_ref, theta_ref, 1.5, 1/self.freq)
+        for i in range(12):
+            self.all_theta_refs[i] += theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        # stand up
+        theta_cur = [0.3, -0.57, 0.31, 
+                      -0.3, 0.57, -0.31, 
+                      -0.3, -1.29, 2.28, 
+                      0.3, 1.29, -2.28]
+        theta_refs = create_multiple_trajectory(theta_cur, theta_start, 0.9, 1/self.freq)
+        for i in range(12):
+            self.all_theta_refs[i] += theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+
+        self.finished = True
 
     # Put your functions below
