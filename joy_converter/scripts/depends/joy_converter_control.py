@@ -80,4 +80,4 @@ class JOY_CONVERTER(object):
         self._joy_value[SHARE] = concat_msg[self._config['mode_btn'][0]][self._config['mode_btn'][1]]
         self._joy_value[PS] = concat_msg[self._config['joy_btn'][0]][self._config['joy_btn'][1]]
 
-        print(self._joy_value[OPTIONS])
+        # print(self._joy_value[OPTIONS])

@@ -1,24 +1,24 @@
 general:
   frequency: 40
 topics:
-  cmd_vel: "cmd_vel" #"ds4/cmd_vel"
-  cmd_pose: "joy_converter/cmd_pose" #"ds4/cmd_pose"
-  cmd_ef_pose: "joy_converter/ef_position/command" #"ds4/ef_position/command"
-  cmd_joint_pos: "joy_converter/joint_group_position_controller/command" #"ds4/joint_group_position_controller/command" 
+  cmd_vel: "joy_converter/cmd_vel"
+  cmd_pose: "joy_converter/cmd_pose"
+  cmd_ef_pose: "joy_converter/ef_position/command"
+  cmd_joint_pos: "joy_converter/joint_group_position_controller/command"
   status: "joy_converter/status"
 gait:
-  max_speed_x: 0.4
+  max_speed_x: 0.8
   max_speed_y: 0.2
   max_speed_z: 1.0
   stride_height: 0.07
 pose:
-  max_angle_x: 0.33
-  max_angle_y: 0.33
+  max_angle_x: 0.38
+  max_angle_y: 0.25
   max_angle_z: 0.33
   max_lin_x: 0.1
   max_lin_y: 0.1
-  max_lin_z: 0.1
-  min_lin_z: 0.15
+  max_lin_z: 0.05
+  min_lin_z: 0.095
 ef:
   max_pos_x: 0.05
   max_pos_y: 0.05
@@ -33,48 +33,30 @@ modes:
   ef: 1
   body: 2
   joint: 3
+
 joystick_config:
-  manual:
-    {
-    rstick_x: [0,3],
-    rstick_y: [0,4],
-    lstick_x: [0,0],
-    lstick_y: [0,1],
-    rbtn_small: [1,5],
-    rbtn_big: [0,5],
-    rstick_btn: [1,10],
-    lbtn_small: [1,4],
-    lbtn_big: [0,2],
-    lstick_btn: [1,9],
-    lpad_x: [0,6],
-    lpad_y: [0,7],
-    rpad_down: [1,0],
-    rpad_left: [1,2],
-    rpad_up: [1,3],
-    rpad_right: [1,1],
-    start_btn: [1,7],
-    mode_btn: [1,6],
-    joy_btn: [1,8]
-    }
-  preset:
-    {
-    rstick_x: [0,3],
-    rstick_y: [0,4],
-    lstick_x: [0,0],
-    lstick_y: [0,1],
-    rbtn_small: [1,5],
-    rbtn_big: [0,5],
-    rstick_btn: [1,10],
-    lbtn_small: [1,4],
-    lbtn_big: [0,2],
-    lstick_btn: [1,9],
-    lpad_x: [0,6],
-    lpad_y: [0,7],
-    rpad_down: [1,0],
-    rpad_left: [1,2],
-    rpad_up: [1,3],
-    rpad_right: [1,1],
-    start_btn: [1,7],
-    mode_btn: [1,6],
-    joy_btn: [1,8]
-    }
+# rstick_x: [0,3]:
+# '0' - get data from Joy.axes or Joy.buttons:
+# 0 - Joy.axes, 1 - Joy.buttons
+# '3' - index in array. Array in Joy.axes/Jot.buttons
+  {
+  rstick_x: [0,3],
+  rstick_y: [0,4],
+  lstick_x: [0,0],
+  lstick_y: [0,1],
+  rbtn_small: [1,5],
+  rbtn_big: [0,5],
+  rstick_btn: [1,10],
+  lbtn_small: [1,4],
+  lbtn_big: [0,2],
+  lstick_btn: [1,9],
+  lpad_x: [0,6],
+  lpad_y: [0,7],
+  rpad_down: [1,0],
+  rpad_left: [1,2],
+  rpad_up: [1,3],
+  rpad_right: [1,1],
+  start_btn: [1,7],
+  mode_btn: [1,6],
+  joy_btn: [1,8]
+  }
