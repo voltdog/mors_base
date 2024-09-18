@@ -4,7 +4,7 @@
     <arg name="rviz"                  default="false" />
     <arg name="robogui"               default="false" />
     <arg name="joystick"              default="true" />
-    <arg name="joy"                   default="js4" />
+    <arg name="joy"                   default="js0" />
     <arg name="radiolink"             default="false" />
     <arg name="sim"                   default="true" />
     <arg name="hardware"              default="false" />
