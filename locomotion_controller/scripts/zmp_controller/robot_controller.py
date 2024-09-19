@@ -540,6 +540,7 @@ class RobotController():
         return ref_servo_pos, ref_servo_vel, ref_servo_torq, ref_servo_kp, ref_servo_kd
 
     def joint_control(self):
+        
         ref_servo_kp = self.kp[:]
         ref_servo_kd = self.kd[:]
         ref_servo_pos = self.cmd_joint_pos
@@ -568,6 +569,16 @@ class RobotController():
 
     def set_cmd_vel(self, vel):
         self.cmd_vel = vel[:]
+
+        if self.cmd_vel[X] > 0.8:
+            self.cmd_vel[X] = 0.8
+        if self.cmd_vel[X] < -0.4:
+            self.cmd_vel[X] = -0.4
+
+        if self.cmd_vel[Y] > 0.2:
+            self.cmd_vel[Y] = 0.2
+        if self.cmd_vel[Y] < -0.2:
+            self.cmd_vel[Y] = -0.2
             
         if self.cmd_vel[Z] > 0.91:
             self.cmd_vel[Z] = 0.91

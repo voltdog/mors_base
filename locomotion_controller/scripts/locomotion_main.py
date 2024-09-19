@@ -15,7 +15,7 @@ import rospy
 from pyrr import Quaternion
 from scipy.spatial.transform import Rotation
 
-from champ_msgs.msg import ContactsStamped
+from mors.msg import ContactsStamped
 from sensor_msgs.msg import Imu, JointState
 from geometry_msgs.msg import Twist, PoseArray, Pose
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -61,6 +61,9 @@ class Locomotion_Control(object):
                                           cog_offset_x=self.cog_x_offset,
                                           cog_offset_y=self.cog_y_offset,
                                           cog_offset_z=self.cog_z_offset,)
+        # self.controller.set_cmd_joint_pos([0]*12, [0]*12, [0]*12)
+        # self.controller.set_kp([0]*12)
+        # self.controller.set_kd([0]*12)
         self._init_ros()
 
         self.lcm_exch = LCMDataExchange(servo_cmd_cnannel=self.lcm_servo_cmd_channel,
@@ -146,7 +149,6 @@ class Locomotion_Control(object):
         self.ef_poses_msg = PoseArray()
         self.ref_joint_msg = JointTrajectoryPoint()
         
-
         # init services
         sm = rospy.Service('robot_mode', QuadrupedCmd, self.srv_callback_mode)
         sa = rospy.Service('robot_action', QuadrupedCmd, self.srv_callback_action)
@@ -204,7 +206,8 @@ class Locomotion_Control(object):
         self.controller.set_cmd_ef_pos(self.cmd_ef_pos)
 
     def cmd_joint_callback(self, msg : JointTrajectoryPoint):
-        self.controller.set_cmd_joint_pos(msg.positions, msg.velocities, msg.effort)
+        if len(msg.positions) == 12 or len(msg.velocities) == 12 or len(msg.effort) == 12: 
+            self.controller.set_cmd_joint_pos(msg.positions, msg.velocities, msg.effort)
 
     def srv_callback_mode(self, req : QuadrupedCmdRequest):
         rospy.loginfo(f"I got mode num: {req.cmd}")

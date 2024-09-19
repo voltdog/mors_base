@@ -8,7 +8,7 @@ simulation:
   yaw_kp: 0.4
   kinematic_scheme : "m"
   robot_height: 0.17
-  cog_x_offset: 0 #-0.015
+  cog_x_offset: 0 
   cog_y_offset: 0.0
   cog_z_offset: 0.04
   ef_init_x: 0.149
@@ -22,12 +22,12 @@ hardware:
   kd : [0.4, 0.35, 0.3]
   yaw_kp: 0.5
   kinematic_scheme : "m" #"o" #"x" #"m"
-  robot_height: 0.19 #0.19 #0.19 #0.19
-  cog_x_offset: -0.02 #0.0 #-0.01 #-0.02
-  cog_y_offset: 0.0 #0.0 #0.0 #0.0
-  cog_z_offset: 0.0 #0.0 #0.0 #0.0
-  ef_init_x: 0.149 #0.149 #0.149 #0.149
-  ef_init_y: 0.10 #0.10 #0.10 #0.10
+  robot_height: 0.19
+  cog_x_offset: -0.02
+  cog_y_offset: 0.0
+  cog_z_offset: 0.0
+  ef_init_x: 0.149
+  ef_init_y: 0.10 
   stride_frequency: 2.5
   preview_horizon: 1.6
  

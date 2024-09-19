@@ -12,8 +12,9 @@ from scipy.spatial.transform import Rotation
 class LogWriter():
     def __init__(self) -> None:
         rospy.init_node("log_writer")
-        self.rate = rospy.Rate(0.1)#300)
+        self.rate = rospy.Rate(0.1)
 
+        # подпишемся на интересующие нас топики
         rospy.Subscriber("cmd_vel", Twist, self.cmd_vel_callback, queue_size=10)
         rospy.Subscriber("cmd_pose", Twist, self.cmd_pose_callback, queue_size=10)
         rospy.Subscriber("joint_states", JointState, self.cur_joint_pos_callback, queue_size=1)
@@ -21,6 +22,7 @@ class LogWriter():
         rospy.Subscriber("imu/data", Imu, self.imu_callback, queue_size=1)
         rospy.Subscriber("bat", BatteryState, self.battery_callback, queue_size=1)
 
+        # создадим сообщения для подписанных топиков
         self.cmd_vel_msg = Twist()
         self.cmd_pose_msg = Twist()
         self.cur_joints_msg = JointState()
@@ -28,36 +30,35 @@ class LogWriter():
         self.imu_msg = Imu()
         self.bat_msg = BatteryState()
 
+        # создадим файл для записи логов
         filename = f"log_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}.csv"
         self.file = open(f"/home/user/mors_ws/src/mors_base/log_writer/logs/{filename}", 'w')
 
-        # cmd_vel[X], cmd_vel[Y], cmd_vel[Z], \
-        #     cmd_pose_linear[X], cmd_pose_linear[Y], cmd_pose_linear[Z], cmd_pose_angular[X], cmd_pose_angular[Y], cmd_pose_angular[Z],\
-        #     cur_joint[0], cur_joint[1], cur_joint[2], cur_joint[3], cur_joint[4], cur_joint[5], \
-        #     cur_joint[6], cur_joint[7], cur_joint[8], cur_joint[9], cur_joint[10], cur_joint[11], \
-        #     ref_joint[0], ref_joint[1], ref_joint[2], ref_joint[3], ref_joint[4], ref_joint[5], \
-        #     ref_joint[6], ref_joint[7], ref_joint[8], ref_joint[9], ref_joint[10], ref_joint[11], \
-        #     roll, pitch, yaw, \
+        # добавим в таблицу заголовки нужных колонок        
         line = "datetime, t, \
-            voltage"
+            voltage, cmd_vel[X], cmd_vel[Y], cmd_vel[Z], \
+            cmd_pose_linear[X], cmd_pose_linear[Y], cmd_pose_linear[Z], cmd_pose_angular[X], cmd_pose_angular[Y], cmd_pose_angular[Z],\
+            cur_joint[0], cur_joint[1], cur_joint[2], cur_joint[3], cur_joint[4], cur_joint[5], \
+             cur_joint[6], cur_joint[7], cur_joint[8], cur_joint[9], cur_joint[10], cur_joint[11], \
+             ref_joint[0], ref_joint[1], ref_joint[2], ref_joint[3], ref_joint[4], ref_joint[5], \
+             ref_joint[6], ref_joint[7], ref_joint[8], ref_joint[9], ref_joint[10], ref_joint[11], \
+             roll, pitch, yaw"
         self.file.write(line + '\n')
 
         rospy.loginfo("log_writer started")
 
 
     def loop(self):
-        # start_t = int(datetime.datetime.now().strftime("%H%M%S%f"))
         start_t = time.time()
         while not rospy.is_shutdown():
-            # now = datetime.datetime.now()
-            # t = (int(now.strftime("%H%M%S%f")) - start_t)/1000000
+            # определим текущее время
             now = time.time()
             t = int(now - start_t)+1
-            print(t)
 
             cur_joint_str = ""
             ref_joint_str = ""
 
+            # обработаем данные о сервоприводах
             for i in range(12):
                 if len(self.cur_joints_msg.position) >= 12:
                     cur_joint_str += f"{self.cur_joints_msg.position[i]}, " #f"1, "#
@@ -68,6 +69,7 @@ class LogWriter():
                 else:
                     ref_joint_str += "0, "
 
+            # обработаем данные с IMU
             quat_df = [self.imu_msg.orientation.x, self.imu_msg.orientation.y, self.imu_msg.orientation.z, self.imu_msg.orientation.w]
             if quat_df[3] != 0:
                 quat = Quaternion(quat_df).inverse
@@ -78,18 +80,22 @@ class LogWriter():
 
             voltage = self.bat_msg.voltage
 
-            # {self.cmd_vel_msg.linear.x}, {self.cmd_vel_msg.linear.y}, {self.cmd_vel_msg.angular.z}, \
-            #     {self.cmd_pose_msg.linear.x}, {self.cmd_pose_msg.linear.y}, {self.cmd_pose_msg.linear.z}, \
-            #     {self.cmd_pose_msg.angular.x}, {self.cmd_pose_msg.angular.y}, {self.cmd_pose_msg.angular.z}, \
-            #     {cur_joint_str}{ref_joint_str}\
-            #     {rot_euler[0]}, {rot_euler[0]}, {rot_euler[0]}\
+            # запишем в одну строку все данные полученные с колбэков 
             line = f"{now}, {t}, \
                 {voltage}\
+                {self.cmd_vel_msg.linear.x}, {self.cmd_vel_msg.linear.y}, {self.cmd_vel_msg.angular.z}, \
+                {self.cmd_pose_msg.linear.x}, {self.cmd_pose_msg.linear.y}, {self.cmd_pose_msg.linear.z}, \
+                {self.cmd_pose_msg.angular.x}, {self.cmd_pose_msg.angular.y}, {self.cmd_pose_msg.angular.z}, \
+                {cur_joint_str}{ref_joint_str}\
+                {rot_euler[0]}, {rot_euler[0]}, {rot_euler[0]}\
                 \n"
+            
+            # запишем строку в файл
             self.file.write(line)
 
-
             self.rate.sleep()
+
+    # колбэки на топики, на которые мы подписались
 
     def battery_callback(self, msg : BatteryState):
         self.bat_msg = msg

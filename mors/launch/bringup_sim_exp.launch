@@ -4,7 +4,7 @@
     <arg name="rviz"                  default="false" />
     <arg name="robogui"               default="false" />
     <arg name="joystick"              default="true" />
-    <arg name="joy"                   default="js0" />
+    <arg name="joy"                   default="js4" />
     <arg name="radiolink"             default="false" />
     <arg name="sim"                   default="true" />
     <arg name="hardware"              default="false" />
@@ -33,22 +33,22 @@
     <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find mors_sim)/rviz/ctrl_test.rviz" />
     
     <node if="$(arg sim)" name="mors_pybullet" pkg="mors_sim" type="mors_pybullet.py" output="screen"/>
-    <node name="cmd_commutator" pkg="cmd_commutator" type="main.py" output="screen"/>
+    <!-- <node name="cmd_commutator" pkg="cmd_commutator" type="main.py" output="screen"/> -->
     <node if="$(arg locomotion_controller)" name="locomotion_controller" pkg="locomotion_controller" type="locomotion_main.py" output="screen"/>
     <node if="$(arg lcm2ros)" name="servo_state_lcm2ros" pkg="servo_state_lcm2ros" type="main.py" output="screen"/>
 
     <node if="$(arg robogui)" name="robogui" pkg="robogui" type="main.py" output="screen"/>
 
-    <node if="$(arg joystick)" name="joy_converter" pkg="joy_converter" type="joy_converter_main.py" output="screen">
+    <!-- <node if="$(arg joystick)" name="joy_converter" pkg="joy_converter" type="joy_converter_main.py" output="screen">
         <param name='joystick_path' value="$(arg joy)"/>
     </node>
 
     <node if="$(arg joystick)" name="joy_node" pkg="joy" type="joy_node">
         <param name="dev" value="/dev/input/$(arg joy)" />
-    </node>
+    </node> -->
     <!-- <node if="$(arg ds4)" name="ds4_driver" pkg="ds4_driver" type="ds4_driver_node.py" output="screen"/> -->
     <!-- <node if="$(arg ds4)" name="logitech_driver" pkg="logitech_gamepad" type="logitech_gamepad_node.py" output="screen"/> -->
-    <node if="$(arg radiolink)" name="radiolink_teleop" pkg="radiolink_teleop" type="t8s_hid.py" output="screen"/>
+    <!-- <node if="$(arg radiolink)" name="radiolink_teleop" pkg="radiolink_teleop" type="t8s_hid.py" output="screen"/> -->
 
     <!-- Run Bosch BNO055 IMU -->
     <arg name="bosch_config_file" default="$(find bosch_imu_driver)/config/imu_bosch.yaml"/>

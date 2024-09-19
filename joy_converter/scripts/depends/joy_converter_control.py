@@ -26,7 +26,7 @@ OPTIONS = 18
 SHARE = 19
 PS = 20
 STATUS = 21
-
+ 
 class JOY_CONVERTER(object):
     def __init__(self, value_topic="joy", status_topic='diagnostics'):
         rospy.Subscriber(value_topic, Joy, self.joy_callback_values, queue_size=1)
@@ -79,3 +79,5 @@ class JOY_CONVERTER(object):
         self._joy_value[OPTIONS] = concat_msg[self._config['start_btn'][0]][self._config['start_btn'][1]]
         self._joy_value[SHARE] = concat_msg[self._config['mode_btn'][0]][self._config['mode_btn'][1]]
         self._joy_value[PS] = concat_msg[self._config['joy_btn'][0]][self._config['joy_btn'][1]]
+
+        # print(self._joy_value[OPTIONS])

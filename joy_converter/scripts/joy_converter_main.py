@@ -128,17 +128,12 @@ if __name__ == '__main__':
     ef_mode = rospy.get_param('~modes/ef', 1)
     body_mode = rospy.get_param('~modes/body', 2)
     joint_mode = rospy.get_param('~modes/joint', 3)
-
+ 
   
-    joy_path = rospy.get_param('~joystick_path', 'js0')
-    print(joy_path)
+    joy_path = rospy.get_param('~general/joystick_path', 'js0')
     name = get_device_name_by_path(joy_path)
-    print(name)
-    if (name=='Logitech Gamepad F710') or (name=='Microsoft X-Box 360 pad'):
-        joy_config = rospy.get_param('~joystick_config/preset')
-    else:
-        joy_config = rospy.get_param('~joystick_config/manual')
-    
+    print(f"Joystick name: {name}") 
+    joy_config = rospy.get_param('~joystick_config')   
 
     # publishers
     cmd_vel_pub = rospy.Publisher(cmd_vel_topic, Twist, queue_size=10)
