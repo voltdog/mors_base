@@ -27,6 +27,7 @@ class LCMDataExchange():
 
     def servo_state_callback(self, channel, data):
         state_msg = servo_state_msg.decode(data)
+
         self.cur_pos = state_msg.position
         self.cur_vel = state_msg.velocity
         self.cur_torq = state_msg.torque
