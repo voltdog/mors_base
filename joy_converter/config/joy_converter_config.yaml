@@ -1,11 +1,11 @@
 general:
   frequency: 40
 topics:
-  cmd_vel: "joy_converter/cmd_vel"
-  cmd_pose: "joy_converter/cmd_pose"
-  cmd_ef_pose: "joy_converter/ef_position/command"
-  cmd_joint_pos: "joy_converter/joint_group_position_controller/command"
-  status: "joy_converter/status"
+  cmd_vel: "nav/cmd_vel"
+  cmd_pose: "nav/cmd_pose"
+  cmd_ef_pose: "nav/ef_position/command"
+  cmd_joint_pos: "nav/joint_group_position_controller/command"
+  status: "nav/status"
 gait:
   max_speed_x: 0.8
   max_speed_y: 0.2

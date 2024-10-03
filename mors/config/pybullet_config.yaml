@@ -1,6 +1,6 @@
 frequency: 300
 urdf_root: "./urdf"
-world: "gazebo_racetrack_day" #"empty" #
+world: "empty" #"gazebo_racetrack_day" #
 render: True
 on_rack: False
 foot_contacts: True
