@@ -50,11 +50,12 @@
     <!-- <node if="$(arg ds4)" name="logitech_driver" pkg="logitech_gamepad" type="logitech_gamepad_node.py" output="screen"/> -->
     <node if="$(arg radiolink)" name="radiolink_teleop" pkg="radiolink_teleop" type="t8s_hid.py" output="screen"/>
 
-    <!-- Run Bosch BNO055 IMU -->
-    <arg name="bosch_config_file" default="$(find bosch_imu_driver)/config/imu_bosch.yaml"/>
+    <!-- Run IMU -->
+    <arg if="$(arg hardware)" name="bosch_config_file" default="$(find bosch_imu_driver)/config/imu_bosch.yaml"/>
     <node if="$(arg hardware)"  pkg="bosch_imu_driver" type="bosch_imu_node.py" name="bosch_imu_node" output="screen">
         <rosparam file="$(arg bosch_config_file)" command="load" ns="bosch_imu_driver"/>
     </node>
+    <!-- <node if="$(arg hardware)"  pkg="bhi360_imu_node" type="usb_imu_ndof_comb" name="bhi360_imu_node" output="screen" respawn="true"/> -->
 
     <group ns="$(arg robot_name)">
         <param name="tf_prefix" value="$(arg robot_name)"/>
