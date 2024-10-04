@@ -44,6 +44,8 @@ class Action7():
         self.all_kp_refs = [[], [], [], [], [], [], [], [], [], [], [], []]
         self.all_kd_refs = [[], [], [], [], [], [], [], [], [], [], [], []]
 
+        self.hand = False
+
         # print(self.max_kp)
 
     def is_finished(self):
@@ -87,7 +89,128 @@ class Action7():
         return finished, self.ref_joint_pos, self.ref_joint_vel, self.ref_joint_torq, self.ref_joint_kp, self.ref_joint_kd
 
     def execute(self):
+        self.finished = False
+
         # Put your code here
-        pass
+        # self.hand = not self.hand
+        # установим kp и kd
+        self.ref_joint_kp = [self.max_kp[0], self.max_kp[1], self.max_kp[2]]*4
+        self.ref_joint_kd = [self.max_kd[0], self.max_kd[1], self.max_kd[2]]*4
+
+        # установим текущие углы в качестве желаемых
+        theta_cur = list(self.cur_joint_pos[:])
+        for i in range(12):
+            self.all_theta_refs[i].append(theta_cur[i])
+            self.all_kp_refs[i].append(self.ref_joint_kp[i])
+            self.all_kd_refs[i].append(self.ref_joint_kd[i])
+
+        # сместим корпус
+        if self.hand == True:
+            cog_point_x = 0.04
+            cog_point_y = 0.04
+            r1_point_z = 0.08
+            l1_point = 0.0
+            sit_point = 0.02
+        else:
+            cog_point_x = 0.04
+            cog_point_y = -0.04
+            r1_point_z = 0.0
+            l1_point = 0.08
+            sit_point = 0.02
+        theta_ref = self.ik.calculate([ self.ef_init_x+self.cog_offset_x+cog_point_x, -self.ef_init_y-cog_point_y, -self.robot_height-sit_point+r1_point_z,
+                                    self.ef_init_x+self.cog_offset_x+cog_point_x,  self.ef_init_y-cog_point_y, -self.robot_height-sit_point+l1_point,
+                                    -self.ef_init_x+self.cog_offset_x+cog_point_x, -self.ef_init_y-cog_point_y, -self.robot_height+sit_point,
+                                    -self.ef_init_x+self.cog_offset_x+cog_point_x,  self.ef_init_y-cog_point_y, -self.robot_height+sit_point], config=self.kinematic_scheme)
+
+        theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.25, 1/self.freq)
+
+        for i in range(12):
+            self.all_theta_refs[i] += theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        # вытянем лапу
+        theta_cur = theta_ref[:]
+        if self.hand == True:
+            r1_point_x = 0.19
+            l1_point_x = 0.0
+            r1_point_z = 0.1
+            l1_point_z = 0.0
+        else:
+            r1_point_x = 0.0
+            l1_point_x = 0.19
+            r1_point_z = 0.0
+            l1_point_z = 0.1
+
+        theta_ref = self.ik.calculate([self.ef_init_x+self.cog_offset_x+cog_point_x+r1_point_x, -self.ef_init_y-cog_point_y, -self.robot_height-sit_point+r1_point_z,
+                                       self.ef_init_x+self.cog_offset_x+cog_point_x+l1_point_x,  self.ef_init_y-cog_point_y, -self.robot_height-sit_point+l1_point_z,
+                                      -self.ef_init_x+self.cog_offset_x+cog_point_x,            -self.ef_init_y-cog_point_y, -self.robot_height+sit_point,
+                                      -self.ef_init_x+self.cog_offset_x+cog_point_x,             self.ef_init_y-cog_point_y, -self.robot_height+sit_point], config=self.kinematic_scheme)
+        theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.3, 1/self.freq)
+
+        for i in range(12):
+            self.all_theta_refs[i] += theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        # пожмем лапу
+        if self.hand == True:
+            r1_shake = 0.03
+            l1_shake = 0.0
+        else:
+            r1_shake = 0.0
+            l1_shake = 0.03
+        for _ in range(4):
+            theta_cur = theta_ref[:]
+            theta_ref = self.ik.calculate([self.ef_init_x+self.cog_offset_x+cog_point_x+r1_point_x, -self.ef_init_y-cog_point_y, -self.robot_height-sit_point+r1_point_z+r1_shake,
+                                           self.ef_init_x+self.cog_offset_x+cog_point_x+l1_point_x,  self.ef_init_y-cog_point_y, -self.robot_height-sit_point+l1_point_z+l1_shake,
+                                          -self.ef_init_x+self.cog_offset_x+cog_point_x,            -self.ef_init_y-cog_point_y, -self.robot_height+sit_point,
+                                          -self.ef_init_x+self.cog_offset_x+cog_point_x,             self.ef_init_y-cog_point_y, -self.robot_height+sit_point], config=self.kinematic_scheme)
+            theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.1, 1/self.freq)
+
+            for i in range(12):
+                self.all_theta_refs[i] += theta_refs[i]
+                self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+                self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+            theta_cur = theta_ref[:]
+            theta_ref = self.ik.calculate([self.ef_init_x+self.cog_offset_x+cog_point_x+r1_point_x, -self.ef_init_y-cog_point_y, -self.robot_height-sit_point+r1_point_z+0.0,
+                                           self.ef_init_x+self.cog_offset_x+cog_point_x+l1_point_x,  self.ef_init_y-cog_point_y, -self.robot_height-sit_point+l1_point_z+0.0,
+                                          -self.ef_init_x+self.cog_offset_x+cog_point_x,            -self.ef_init_y-cog_point_y, -self.robot_height+sit_point,
+                                          -self.ef_init_x+self.cog_offset_x+cog_point_x,             self.ef_init_y-cog_point_y, -self.robot_height+sit_point], config=self.kinematic_scheme)
+            theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.1, 1/self.freq)
+
+            for i in range(12):
+                self.all_theta_refs[i] += theta_refs[i]
+                self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+                self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        # вернем лапу обратно
+        theta_cur = theta_ref[:]
+        theta_ref = self.ik.calculate([ self.ef_init_x+self.cog_offset_x+cog_point_x, -self.ef_init_y-cog_point_y, -self.robot_height-sit_point+r1_point_z,
+                                       self.ef_init_x+self.cog_offset_x+cog_point_x,  self.ef_init_y-cog_point_y, -self.robot_height-sit_point+l1_point_z,
+                                      -self.ef_init_x+self.cog_offset_x+cog_point_x, -self.ef_init_y-cog_point_y, -self.robot_height+sit_point,
+                                      -self.ef_init_x+self.cog_offset_x+cog_point_x,  self.ef_init_y-cog_point_y, -self.robot_height+sit_point], config=self.kinematic_scheme)
+        theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.25, 1/self.freq)
+        for i in range(12):
+            self.all_theta_refs[i] += theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+
+        # вернем корпус обратно
+        theta_cur = theta_ref[:]
+        theta_ref = self.ik.calculate([ self.ef_init_x+self.cog_offset_x, -self.ef_init_y, -self.robot_height,
+                                       self.ef_init_x+self.cog_offset_x,  self.ef_init_y, -self.robot_height,
+                                      -self.ef_init_x+self.cog_offset_x, -self.ef_init_y, -self.robot_height,
+                                      -self.ef_init_x+self.cog_offset_x,  self.ef_init_y, -self.robot_height], config=self.kinematic_scheme)
+        theta_refs = create_multiple_trajectory(theta_cur, theta_ref, 0.35, 1/self.freq)
+        for i in range(12):
+            self.all_theta_refs[i] += theta_refs[i]
+            self.all_kp_refs[i] += [self.ref_joint_kp[i]]*len(theta_refs[i])
+            self.all_kd_refs[i] += [self.ref_joint_kd[i]]*len(theta_refs[i])
+        
+        # Finish
+
 
     # Put your functions below
+    

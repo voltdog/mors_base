@@ -92,7 +92,7 @@ class Action3():
         self.finished = False
 
         # Put your code here
-        self.hand = not self.hand
+        # self.hand = not self.hand
         # установим kp и kd
         self.ref_joint_kp = [self.max_kp[0], self.max_kp[1], self.max_kp[2]]*4
         self.ref_joint_kd = [self.max_kd[0], self.max_kd[1], self.max_kd[2]]*4
