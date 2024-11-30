@@ -1,0 +1,57 @@
+frequency: 300
+urdf_root: "./urdf"
+world: "empty" #"gazebo_racetrack_day" #
+render: True
+on_rack: False
+foot_contacts: True
+
+camera: False
+pointcloud_enabled: True
+camera_frame: "camera_frame"
+camera_freq: 10
+pixel_width: 100
+pixel_height: 100
+camera_rgb_topic: "camera/rgb/image_raw"
+camera_rgb_info_topic: "camera/rgb/camera_info"
+camera_depth_image_topic: "camera/depth/image_raw"
+camera_depth_points_topic: "camera/depth/points"
+camera_depth_info_topic: "camera/depth/camera_info"
+# pointcloud_topic: "pointcloud/points"
+
+lidar: True
+lidar_render: False
+lidar_freq: 10
+lidar_angle_min: -3.14 #-2.2689
+lidar_angle_max: 3.14 #2.2689
+# lidar_angle_increment: -0.00436752
+lidar_time_increment: 0
+lidar_point_num: 760
+lidar_range_min: 0.15
+lidar_range_max: 12.0
+lidar_frame: "scan_frame"
+lidar_topic: "scan"
+
+lateral_friction: 1.0
+spinning_friction: 0.0065
+
+accurate_motor_model_enabled: False
+simple_motor_model_enabled: True
+torque_control_enabled: False
+
+external_disturbance: False
+external_disturbance_value: 4000 # newtons
+external_disturbance_duration: 0.02 # seconds
+external_disturbance_interval: 2 # seconds
+
+ros_whole_body_state: False
+ros_whole_body_state_topic: "wb_state"
+
+ros_imu_topic: "imu/data"
+ros_joint_states_topic: "joint_states"
+ros_contact_flags_topic: "foot_contacts"
+ros_robot_odom_topic: "robot_odom"
+lcm_servo_cmd_channel: "SERVO_CMD"
+lcm_servo_state_channel: "SERVO_STATE"
+
+joint_dir: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+joint_offset: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

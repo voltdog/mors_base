@@ -1,0 +1,50 @@
+general:
+  frequency: 40
+cmd_topics:
+  cmd_vel: "gui/cmd_vel"
+  cmd_pose: "gui/cmd_pose"
+  cmd_ef_pose: "gui/ef_position/command"
+  cmd_joint_pos: "gui/joint_group_position_controller/command" 
+  status: "gui/status"
+
+state_topics:
+  cur_device: "cur_device"
+  joint_state: "joint_states"
+  imu_data: "imu/data"
+  temperature_data: "imu/temp"
+  cmd_vel: "cmd_vel"
+  cmd_pose: "cmd_pose"
+  cmd_ef_pose: "ef_position/command"
+  cmd_joint_pos: "joint_group_position_controller/command"
+  ef_pose : "ef_position/states"
+  ll_cmd_joint_pos: "lcm/servo_cmd"
+gait:
+  max_speed_x: 0.5
+  max_speed_y: 0.2
+  max_speed_z: 0.9
+pose:
+  max_angle_x: 0.33
+  max_angle_y: 0.25 
+  max_angle_z: 0.33
+  max_lin_x: 0.06
+  max_lin_y: 0.05
+  max_lin_z: 0.05
+  min_lin_z: 0.095
+ef:
+  max_pos_x: 0.13
+  max_pos_y: 0.04
+  max_pos_z: 0.05
+  min_pos_z: 0.05
+joints:
+  max_abad: 1.57
+  max_hip: 3.0
+  max_knee: 3.57
+  max_vel: 5.0
+  max_torq: 5.0
+  max_kp: 24.0
+  max_kd: 1.0
+modes:
+  walk: 0
+  ef: 1
+  body: 2
+  joint: 3

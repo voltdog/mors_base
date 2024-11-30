@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- <arg name="rviz" default="false" /> -->
+    <!-- <arg name="model" default="$(find mors_sim)/urdf/mors.xacro"/>  -->
+
+    <rosparam command="load" file="$(find mors_sim)/config/pybullet_config.yaml" ns="mors_pybullet"/>
+    <!-- <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/> 
+    
+    <node if="$(arg rviz)" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find mors_sim)/rviz/ctrl_test.rviz" /> -->
+    
+    <node name="mors_pybullet" pkg="mors_sim" type="mors_pybullet.py" output="screen"/>
+
+</launch>

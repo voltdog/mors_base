@@ -1,0 +1,3 @@
+{
+    "files": ["main.py","mainwindow.py","robogui/mainwindow.py","robogui/mainwindow.ui"]
+}

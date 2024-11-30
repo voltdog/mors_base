@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Init Variables-->
+  <arg name="rvizconfig" default="$(find mors_sim)/rviz/urdf_test.rviz" />
+  <arg name="gui" default="true" />
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <arg name="model" default="$(find mors_sim)/urdf/mors.xacro"/> 
+  <!-- <arg name="model" default="$(find mors_sim)/urdf/mors_for_nav.urdf"/> -->
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/> 
+
+  <!-- Configurations for Rviz-->
+  <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+  <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+   <!-- Combine joint values -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+   <!-- Show in Rviz   -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/> 
+</launch>

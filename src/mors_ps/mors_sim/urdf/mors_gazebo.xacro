@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<robot>
+
+       <!-- ros_control plugin -->
+	<gazebo>
+		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+			<robotNamespace>/quadro_main</robotNamespace>
+			<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+		</plugin>
+	</gazebo>
+
+        <!-- Show the trajectory of trunk center. -->
+        <!-- <gazebo>
+                <plugin name="3dplot" filename="libLinkPlot3DPlugin.so">
+                        <frequency>10</frequency>
+                        <plot>
+                                <link>knee_R1</link>
+                                <pose>0 -0.176295 0 0 0 0</pose>
+                                <material>Gazebo/Yellow</material>
+                        </plot>
+                </plugin>
+        </gazebo> -->
+
+	<!-- Body Link -->
+	<gazebo reference="base_link">
+                <mu1>0.9</mu1>
+                <mu2>0.9</mu2>
+                <kp  value="1000000.0"/>
+                <kd  value="1.0"/>
+                <material>Gazebo/Grey</material>
+	</gazebo>
+
+	<!-- Shoulder R1 -->
+	<gazebo reference="abad_R1">
+                <kp>1000000.0</kp>
+                <kd>1.0</kd>
+                <mu1>0.9</mu1>
+                <mu2>0.9</mu2>        
+                <fdir1>1 1 0</fdir1>
+                <minDepth>0.001</minDepth>
+                <self_collide>true</self_collide>
+                <max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- hip R1 -->
+	<gazebo reference="hip_R1">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>        
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- knee R1 -->
+	<gazebo reference="knee_R1">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+        <max_vel>0.1</max_vel>
+        <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- shoulder R2 -->
+	<gazebo reference="abad_R2">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>        
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- hip R2 -->
+	<gazebo reference="hip_R2">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>        
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- knee R2 -->
+	<gazebo reference="knee_R2">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>1000.9</mu1>
+        <mu2>1000.9</mu2>
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+        <max_vel>0.1</max_vel>
+        <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- - - - - - - - - - - - - - - -->
+
+	<!-- shoulder L1 -->
+	<gazebo reference="abad_L1">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>        
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- hip L1 -->
+	<gazebo reference="hip_L1">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>        
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- knee L1 -->
+	<gazebo reference="knee_L1">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>1000.9</mu1>
+        <mu2>1000.9</mu2>
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- shoulder L2 -->
+	<gazebo reference="abad_L2">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>        
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- hip L2 -->
+	<gazebo reference="hip_L2">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>        
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+	<!-- knee L2 -->
+	<gazebo reference="knee_L2">
+        <kp>1000000.0</kp>
+        <kd>1.0</kd>
+        <mu1>0.9</mu1>
+        <mu2>0.9</mu2>
+        <fdir1>1 1 0</fdir1>
+        <minDepth>0.001</minDepth>
+        <self_collide>true</self_collide>
+		<max_vel>0.1</max_vel>
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+        <!-- <gazebo reference="ef_R1">
+        <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+        <gazebo reference="ef_R2">
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+        <gazebo reference="ef_L1">
+                <material>Gazebo/DarkGrey</material>
+	</gazebo>
+
+        <gazebo reference="ef_L2">
+                <material>Gazebo/DarkGrey</material>
+	</gazebo> -->
+
+</robot>

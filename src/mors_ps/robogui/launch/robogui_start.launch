@@ -1,0 +1,5 @@
+<launch>
+    <rosparam command="load" file="$(find robogui)/config/robogui_config.yaml" ns="robogui"/>
+    
+    <node name="robogui" pkg="robogui" type="main.py" output="screen"/>
+</launch>

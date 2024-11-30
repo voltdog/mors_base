@@ -1,0 +1,11 @@
+pip install numpy==1.24.4
+pip install control==0.9.4
+pip install pyrr==0.10.3
+pip install pybullet==3.2.5
+pip install pyserial==3.5
+pip install pyqtgraph==0.13.3
+pip install gymnasium
+pip install pcl==0.0.0.post1
+pip install pyquaternion==0.9.9
+pip install evdev
+pip install pyudev
